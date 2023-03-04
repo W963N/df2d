@@ -100,6 +100,11 @@ This is not to say that df2d doesn't need a delete function. As to why df2d does
 
 ## How2Use
 
+1. `go build .`
+2. `./df2d -e env.toml`
+
+### Configuration file
+
 There are two main types of df2d configuration files.
 
 1. env.toml
@@ -112,7 +117,7 @@ config|summary
 env.toml|Defines what is handled in the source directory. It is possible to specify files that are not to be copied.
 df2d.toml|Define the specific copy destination. It is possible to determine the means of copying.
 
-### env.toml
+#### env.toml
 
 Let df2d load with the -e option. The parameters of env.toml are as follows.
 
@@ -123,7 +128,7 @@ Let df2d load with the -e option. The parameters of env.toml are as follows.
 - **isExcluded_hidden_file**
   - `true`:Prefixes with `.` will not be copied.
 
-### df2d.toml
+#### df2d.toml
 
 The file name must be `df2d`. Put it in the directory from which it was copied.
 
@@ -200,3 +205,4 @@ isMkdir=true
 dest_dir="/your/path/to/df2d-dst/new/"
 isOverwrite=true
 ```
+
