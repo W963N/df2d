@@ -1,5 +1,7 @@
 # df2d(Distribute File to Directory)
 
+## What's df2d??
+
 This df2d command distributes files to a specified location. Here, the meaning of destribution is as follows
 
 1. Copy
@@ -96,3 +98,105 @@ df2d doesn't have the function to delete. Finally, the reason for this is explai
 
 This is not to say that df2d doesn't need a delete function. As to why df2d doesn't implement the delete function, from the table above, df2d is in a rougher position to use than rsync (middle). In other words, df2d states that it is better to leave unused files in place without deleting them. Of course, as development progresses, unnecessary files must be deleted. However, developers need not be nervous in the early stages of development. Also, although there is a possibility that unnecessary files will be mass-produced at the copy destination, if unnecessary files are removed from the repository, only necessary files will exist. In other words, the developer only needs to look at the repository to see which files are necessary. This is why df2d doesn't have a delete function.
 
+## How2Use
+
+There are two main types of df2d configuration files.
+
+1. env.toml
+2. df2d.toml
+
+Both are toml files and their uses are as follows:
+
+config|summary
+:--|:--
+env.toml|Defines what is handled in the source directory. It is possible to specify files that are not to be copied.
+df2d.toml|Define the specific copy destination. It is possible to determine the means of copying.
+
+### env.toml
+
+Let df2d load with the -e option. The parameters of env.toml are as follows.
+
+- **root**
+  - The root directory of the copy source.
+- **excluded_ext**
+  - Extended files included in this list are not copied.
+- **isExcluded_hidden_file**
+  - `true`:Prefixes with `.` will not be copied.
+
+### df2d.toml
+
+The file name must be `df2d`. Put it in the directory from which it was copied.
+
+- **isMkdir**
+  - `true`:If the directory does not exist at the copy destination, create it.
+- **dest_dir**
+  - Specify the destination directory.
+- **isOverwrite**
+  - `true`:Overwrites an already existing file.
+- **isSymLink**
+  - `true`:Create a symbolic link, not a copy. Symbolic links to the directories will not be made.
+
+### Logic
+
+The logic for reading df2d.toml is as follows:
+
+1. Copy the files and directories in the directory where df2f.toml is located.
+2. The df2d.toml in the lowest directory of the directory tree takes precedence.
+
+<details>
+<summary>directory tree</summary>
+
+```
+df2d-src
+|-- README.md
+|-- .ignore
+|   \`-- IGNORE.md
+|-- depth1-1
+|   |-- README2-1.md
+|   \`-- depth2-1
+|       \`-- README3-1.md
+|-- depth1-2
+|   |-- .ignore
+|   |-- README2-2.md
+|   \`-- df2d.toml
+\`-- df2d.toml
+
+     |
+     | df2d
+     v
+
+df2d-dst
+|-- README.md
+|-- depth1-1
+|   |-- README2-1.md
+|   `-- depth2-1
+|       `-- README3-1.md
+`-- new
+    `-- README2-2.md
+```
+</details>
+
+The configuration file for this sample is as follows:
+
+`env.toml`
+
+```
+root="/your/path/to/df2d-src"
+isExcluded_hidden_file=true
+```
+
+`df2d-src/df2d.toml`
+
+```
+isMkdir=true
+dest_dir="/your/path/to/df2d-dst/"
+isOverwrite=true
+```
+
+`df2d-src/depth1-2/df2d.toml`
+
+```
+isMkdir=true
+dest_dir="/your/path/to/df2d-dst/new/"
+isOverwrite=true
+```

@@ -1,0 +1,4 @@
+isMkdir=true
+dest_dir="/your/path/to/copy/to/dir/"
+isOverwrite=true
+isSymLink=true
