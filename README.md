@@ -1,2 +1,3 @@
-# df2d
-distribute file to directory
+# df2d(Distribute File to Directory)
+
+
